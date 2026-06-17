@@ -38,7 +38,8 @@ export default function createAdminApi(vite) {
 			throw { HBErrorCode: '52', code: 401, message: 'Access denied' };
 		}
 	};
-
+	
+	// Search for up to 300 brews that have not been viewed or updated in 30 days and are shorter than 140 bytes
 	const junkBrewsPipeline = [
 		{	$match : {
 			updatedAt  : { $lt: Moment().subtract(30, 'days').toDate() },
@@ -49,12 +50,13 @@ export default function createAdminApi(vite) {
 		{ $limit: 300 }
 	];
 
+	// Search for up to 500 unauthored brews that have not been viewed or updated in two years
 	const lostBrewsPipeline = [
 		{
 			$match: {
 				authors: [],
-				updatedAt:  { $lt: Moment().subtract(6, 'years').toDate() },
-				lastViewed: { $lt: Moment().subtract(6, 'years').toDate() }
+				updatedAt:  { $lt: Moment().subtract(2, 'years').toDate() },
+				lastViewed: { $lt: Moment().subtract(2, 'years').toDate() }
 			}
 		},
 		{
@@ -67,7 +69,6 @@ export default function createAdminApi(vite) {
 		'text' : { '$exists': true }
 	}).lean().limit(10000).select('_id');
 
-	// Search for up to 300 brews that have not been viewed or updated in 30 days and are shorter than 140 bytes
 	router.get('/admin/cleanupJunk', mw.adminOnly, (req, res)=>{
 		HomebrewModel.aggregate(junkBrewsPipeline).option({ maxTimeMS: 60000 })
 		.then((objs)=>res.json({ count: objs.length, brewCollection : objs }))
@@ -77,7 +78,7 @@ export default function createAdminApi(vite) {
 		});
 	});
 
-	// Delete up to 300 brews that have not been viewed or updated in 30 days and are shorter than 140 bytes
+	// Delete result of junkBrewsPipeline
 	router.post('/admin/cleanupJunk', mw.adminOnly, (req, res)=>{
 		HomebrewModel.aggregate(junkBrewsPipeline).option({ maxTimeMS: 60000 })
 		.then((docs)=>{
@@ -91,7 +92,6 @@ export default function createAdminApi(vite) {
 		});
 	});
 
-	// Search for up to 300 unauthored brews that have not been viewed or updated in a year
 	router.get('/admin/cleanupLost', mw.adminOnly, (req, res)=>{
 		HomebrewModel.aggregate(lostBrewsPipeline).option({ maxTimeMS: 60000 })
 		.then((objs)=>res.json({ count: objs.length, brewCollection : objs }))
@@ -101,7 +101,7 @@ export default function createAdminApi(vite) {
 		});
 	});
 
-	// Delete up to 300 unauthored brews that have not been viewed or updated in a year
+	// Delete result of lostBrewsPipeline
 	router.post('/admin/cleanupLost', mw.adminOnly, (req, res)=>{
 		HomebrewModel.aggregate(lostBrewsPipeline).option({ maxTimeMS: 60000 })
 		.then((docs)=>{
