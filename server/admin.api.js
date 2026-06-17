@@ -45,7 +45,7 @@ export default function createAdminApi(vite) {
 			updatedAt  : { $lt: Moment().subtract(30, 'days').toDate() },
 			lastViewed : { $lt: Moment().subtract(30, 'days').toDate() }
 		} },
-		{ $project: { _id: 1, textBinSize: { $binarySize: '$textBin' } } },
+		{ $project: { _id: 1, textBinSize: { $binarySize: '$textBin' }, updatedAt: 1, lastViewed: 1} },
 		{ $match: { textBinSize: { $lt: 140 } } },
 		{ $limit: 300 }
 	];
