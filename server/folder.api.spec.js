@@ -192,7 +192,7 @@ describe('Tests for folder api', ()=>{
         'testuser',
         'abc123',
       );
-      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.status).toHaveBeenCalledWith(204);
       expect(res.send).toHaveBeenCalledWith(result);
     });
 
