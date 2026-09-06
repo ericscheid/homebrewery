@@ -15,21 +15,13 @@ jest.mock('./folder.model.js', ()=>({
 }));
 
 import { model as FolderModel } from './folder.model.js';
-
+import * as api from './folder.api.js';
 
 describe('Tests for folder api', ()=>{
-  let api;
-  let model;
   let res;
 
   beforeEach(()=>{
-    jest.resetModules();
-    jest.restoreAllMocks();
-
-    jest.mock('./folder.model.js');
-
-    model = require('./folder.model.js').model;
-    api = require('./folder.api.js');
+    jest.clearAllMocks();
 
     res = {
       status : jest.fn(()=>res),
@@ -37,8 +29,8 @@ describe('Tests for folder api', ()=>{
     };
   });
 
-
   describe('createFolderApi', ()=>{
+
     it('should create a folder', async ()=>{
       const folder = {
         owner       : 'testuser',
@@ -126,10 +118,12 @@ describe('Tests for folder api', ()=>{
         status      : 404,
       });
     });
+
   });
 
 
   describe('updateFolderApi', ()=>{
+
     it('should update a folder', async ()=>{
       const folder = {
         owner       : 'testuser',
@@ -176,15 +170,14 @@ describe('Tests for folder api', ()=>{
         status      : 404,
       });
     });
+
   });
 
 
   describe('deleteFolderApi', ()=>{
+
     it('should delete a folder', async ()=>{
-      const result = {
-        acknowledged : true,
-        deletedCount : 1,
-      };
+      const result = { deletedCount: 1 };
 
       FolderModel.deleteFolder.mockResolvedValue(result);
 
@@ -199,13 +192,12 @@ describe('Tests for folder api', ()=>{
         'testuser',
         'abc123',
       );
-      expect(res.status).toHaveBeenCalledWith(204);
-      expect(res.send).toHaveBeenCalledWith();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith(result);
     });
 
     it('should throw when the folder does not exist', async ()=>{
       const result = {
-        acknowledged : true,
         deletedCount : 0,
       };
 
@@ -213,7 +205,7 @@ describe('Tests for folder api', ()=>{
 
       const req = {
         account : { username: 'testuser' },
-        params  : { folderId: 'missing' },
+        params  : { folderId: 'abc123' },
       };
 
       await expect(api.deleteFolderApi(req, res)).rejects.toEqual({
@@ -223,10 +215,12 @@ describe('Tests for folder api', ()=>{
         status      : 404,
       });
     });
+
   });
 
 
   describe('addBrewToFolderApi', ()=>{
+
     it('should add a brew to a folder', async ()=>{
       const result = {
         owner    : 'testuser',
@@ -238,8 +232,8 @@ describe('Tests for folder api', ()=>{
 
       const req = {
         account : { username: 'testuser' },
-        params  : { folderId: 'abc123' },
-        body    : { brewId: 'brew123' },
+        params  : { folderId : 'abc123', },
+        body    : { brewId : 'brew123', },
       };
 
       await api.addBrewToFolderApi(req, res);
@@ -292,7 +286,14 @@ describe('Tests for folder api', ()=>{
     });
 
     it('should pass through other results', async ()=>{
-      const result = { added: true };
+      const result = {
+        owner       : 'testuser',
+        folderId    : 'abc123',
+        displayName : 'My Folder',
+        slug        : 'my-folder',
+        brewIds     : ['existing-brew', 'brew123'],
+        isPublished : true,
+      };
 
       FolderModel.addBrewToFolder.mockResolvedValue(result);
 
@@ -304,13 +305,20 @@ describe('Tests for folder api', ()=>{
 
       await api.addBrewToFolderApi(req, res);
 
+      expect(FolderModel.addBrewToFolder).toHaveBeenCalledWith(
+        'testuser',
+        'abc123',
+        'brew123',
+      );
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith(result);
     });
+
   });
 
 
   describe('removeBrewFromFolderApi', ()=>{
+
     it('should remove a brew from a folder', async ()=>{
       const result = {
         owner    : 'testuser',
@@ -380,10 +388,12 @@ describe('Tests for folder api', ()=>{
         status      : 404,
       });
     });
+
   });
 
 
   describe('requireAccount', ()=>{
+
     it('should reject a request without an account', async ()=>{
       const router = require('./folder.api.js').default;
 
@@ -405,6 +415,7 @@ describe('Tests for folder api', ()=>{
       expect(router).toBeDefined();
       expect(next).not.toHaveBeenCalled();
     });
+
   });
 
 });

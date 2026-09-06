@@ -12,7 +12,6 @@ jest.mock('./homebrew.model.js', ()=>({
   },
 }));
 
-
 describe('Folder model', ()=>{
   beforeEach(()=>{
     jest.restoreAllMocks();
@@ -20,6 +19,7 @@ describe('Folder model', ()=>{
 
 
   describe('schema', ()=>{
+
     it('should apply defaults', ()=>{
       const folder = new Folder({
         owner : 'testuser',
@@ -118,10 +118,12 @@ describe('Folder model', ()=>{
       expect(folder2.folderId).toHaveLength(12);
       expect(folder1.folderId).not.toBe(folder2.folderId);
     });
+
   });
 
 
   describe('getByUser', ()=>{
+
     it('should return all folders for the user when ownAccount is true', async ()=>{
       const folders = [
         {
@@ -165,10 +167,12 @@ describe('Folder model', ()=>{
 
       expect(result).toBe(folders);
     });
+
   });
 
 
   describe('createFolder', ()=>{
+
     it('should create and save a folder', async ()=>{
       const folder = {
         owner       : 'testuser',
@@ -226,10 +230,12 @@ describe('Folder model', ()=>{
         }),
       ).rejects.toBe(error);
     });
+
   });
 
 
   describe('getFolder', ()=>{
+
     it('should find a folder belonging to the user', async ()=>{
       const folder = {
         owner    : 'testuser',
@@ -258,10 +264,12 @@ describe('Folder model', ()=>{
 
       expect(result).toBeNull();
     });
+
   });
 
 
   describe('updateFolder', ()=>{
+
     it('should update supplied fields', async ()=>{
       const folder = {
         owner       : 'testuser',
@@ -328,10 +336,12 @@ describe('Folder model', ()=>{
 
       expect(result).toBeNull();
     });
+
   });
 
 
   describe('deleteFolder', ()=>{
+
     it('should delete the specified folder belonging to the user', async ()=>{
       const result = {
         acknowledged : true,
@@ -362,10 +372,12 @@ describe('Folder model', ()=>{
 
       expect(actual).toBe(result);
     });
+
   });
 
 
   describe('addBrewToFolder', ()=>{
+
     it('should return BREW_NOT_FOUND when the brew does not exist', async ()=>{
       jest.spyOn(BrewModel, 'exists')
         .mockResolvedValue(null);
@@ -479,10 +491,12 @@ describe('Folder model', ()=>{
 
       expect(Folder.findOneAndUpdate).toHaveBeenCalled();
     });
+
   });
 
 
   describe('removeBrewFromFolder', ()=>{
+
     it('should return BREW_NOT_FOUND when the brew does not exist', async ()=>{
       jest.spyOn(BrewModel, 'exists')
         .mockResolvedValue(null);
@@ -579,6 +593,7 @@ describe('Folder model', ()=>{
 
       expect(result).toBe(folder);
     });
+
   });
 
 });
