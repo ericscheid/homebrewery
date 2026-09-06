@@ -193,7 +193,7 @@ describe('Tests for folder api', ()=>{
         'abc123',
       );
       expect(res.status).toHaveBeenCalledWith(204);
-      expect(res.send).toHaveBeenCalledWith(result);
+      expect(res.send).toHaveBeenCalledWith();
     });
 
     it('should throw when the folder does not exist', async ()=>{
