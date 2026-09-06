@@ -4,7 +4,13 @@
 
 jest.mock('./folder.model.js', ()=>({
   model: {
-    createFolder : jest.fn(),
+    getByUser             : jest.fn(),
+    createFolder          : jest.fn(),
+    getFolder             : jest.fn(),
+    updateFolder          : jest.fn(),
+    deleteFolder          : jest.fn(),
+    addBrewToFolder       : jest.fn(),
+    removeBrewFromFolder  : jest.fn(),
   },
 }));
 
@@ -131,7 +137,7 @@ describe('Tests for folder api', ()=>{
         displayName : 'Updated Folder',
       };
 
-      FolderModel.createFolder.mockResolvedValue(folder);
+      FolderModel.updateFolder.mockResolvedValue(folder);
 
       const req = {
         account : { username: 'testuser' },
@@ -155,7 +161,7 @@ describe('Tests for folder api', ()=>{
     });
 
     it('should throw when the folder does not exist', async ()=>{
-      FolderModel.createFolder.mockResolvedValue(undefined);
+      FolderModel.updateFolder.mockResolvedValue(undefined);
 
       const req = {
         account : { username: 'testuser' },
