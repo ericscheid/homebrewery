@@ -307,7 +307,7 @@ const errorIndex = (errorCode, props = {})=>{
 			return dedent`Lock Remove Review Error: Brew not found`;
 
 
-		// ####### Other Errors
+		// ####### Vault Errors
 
 		case '90':
 			return dedent`An unexpected error occurred while looking for these brews.

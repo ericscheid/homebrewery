@@ -198,7 +198,7 @@ describe('errorIndex', () => {
       errorCodes = codeStrings('60', '73');
       assertErrorMessages(errorCodes);
 
-      // other errors
+      // Vault errors
       errorCodes = [ '90', '91' ];
       assertErrorMessages(errorCodes);
 
