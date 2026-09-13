@@ -310,7 +310,8 @@ const errorIndex = (errorCode, props = {})=>{
 		// ####### Vault Errors
 
 		case '90':
-			return dedent`An unexpected error occurred while looking for these brews.
+			return dedent`
+				An unexpected error occurred while looking for these brews.
 				Try again in a few minutes.`;
 
 		case '91':
