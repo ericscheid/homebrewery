@@ -56,8 +56,8 @@ export const folderApiErrors = {
   '108': `Folder could not be updated.`,
   '109': `Folder could not be deleted.`,
 
-  '106': `Folder to update could not be found.`,    // do we need separate codes??
-  '107': `Folder to delete could not be found.`,    // do we need separate codes??
+  '106': `Folder to update could not be found.`,
+  '107': `Folder to delete could not be found.`,
 
   // graph integrity
   '111': `Folder to add brew to could not be found.`,
